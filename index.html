@@ -1,33 +1,121 @@
-<!DOCTYPE html>
+<!doctype HTML>
 <html>
 
 <head>
 
-<title>Template</title>
+<title>roulette</title>
 
 <style>
 <!--
 body {
     text-align: center;
 }
+
 h1 {
     font-size: 20px;
     margin: 0px;
     margin-top: 50px;
 }
+
 article {
     margin: 30px;
 }
+
+#wrapper {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+#roulette {
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+}
+
+#roulette-needle {
+    position: absolute;
+    z-index: 100;
+    left: 0px;
+    top: 0px;
+}
+
 footer {
     font-size: 10px;
 }
 -->
 </style>
 
+<script src="lib/anime.min.js"></script>
 <script type="text/javascript">
 <!--
+'use strict'
+
 window.onload = function() {
-    document.getElementById("content").textContent = "SomeContent"
+    const r = document.getElementById('roulette');
+    const rctx = r.getContext('2d');
+
+    const n = document.getElementById('roulette-needle');
+    const nctx = n.getContext('2d');
+
+    drawRoulette(rctx, 5);
+    drawNeedle(nctx)
+    n.onclick = function() {
+        rotate(rctx, r);
+        drawNeedle(nctx)
+    };
+};
+
+function drawSector(x, y, radius, startAngle, endAngle, color, ctx) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, radius, startAngle, endAngle, false);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function drawRoulette(ctx, n) {
+    const angle1 = Math.PI * 2 / n;
+
+    for(let i = 0; i < n; i++) {
+        drawSector(150, 150, 100, angle1 * i, angle1 * (i + 1), getRandomColor(), ctx);
+    }
+}
+
+function drawNeedle(ctx) {
+    const radius = 10;
+    const height = 100;
+    ctx.beginPath();
+    ctx.fillStyle = '#F00';
+    ctx.moveTo(150 - radius, 0);
+    ctx.lineTo(150 + radius, 0);
+    ctx.lineTo(150, height);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function rotate(ctx, r) {
+    anime({
+        targets: r,
+        rotate: ['0turn', (Math.random() + 2) + 'turn'],
+        easing: 'easeOutQuad', 
+        duration: 3000,
+    });
+}
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+
+    for (let i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+
+    }
+
+    return color;
 }
 -->
 </script>
@@ -36,15 +124,18 @@ window.onload = function() {
 
 <body>
 <header>
-    <h1>タイトル</h1>
-    説明
+    <h1>ルーレット</h1>
+    クリックで回転
 </header>
 <article>
-    <div id='content'></div>
+    <div id='wrapper'>
+        <canvas id='roulette' width="300" height="300"></canvas>
+        <canvas id='roulette-needle' width="300" height="300"></canvas>
+    </div>
 </article>
 
 <footer>
-    <a href="https://github.com/ix5231/template">GitHub repo</a>
+    <a href="https://github.com/ix5231/roulette">GitHub repo</a>
 </footer>
 
 </body>

@@ -1,6 +1,10 @@
-# テンプレート
+# roulette
 
-ここに簡単な説明とか書く
+簡易ルーレット。クリックすると回転します。
+
+謝辞
+----
+[anime.js](https://github.com/juliangarnier/anime)
 
 ライセンス
 ----------
